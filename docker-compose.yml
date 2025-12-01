@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  smolvlm2-demo:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: smolvlm2-demo
+    ports:
+      - "${PORT:-7860}:7860"
+    environment:
+      - DEVICE=${DEVICE:-cpu}
+      - MODEL_DTYPE=${MODEL_DTYPE:-float32}
+      - PORT=7860
+      - MODEL_CACHE_DIR=/app/models
+    volumes:
+      # Монтирование кэша моделей
+      - ./models:/app/models
+      # Монтирование кэша Hugging Face (если нужно)
+      - ./hf_cache:/home/appuser/.cache/huggingface
+    restart: unless-stopped
+    # Для GPU раскомментировать:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]

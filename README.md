@@ -7,12 +7,13 @@ run inside repo:
 docker-compose up --build
 
 # Using
-
 docker run -p 7860:7860 \
   -v ./models:/app/models \
   -e DEVICE=cpu \
   smolvlm2-demo
 
-The server will be on 0.0.0.0:7860
+The server will be on http://localhost:7860/
+
+The model size can be changed in app/config.py file
 
 Solved tasks: VQA + Captioning and OCR.

@@ -17,8 +17,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app/ ./app/
 
 # Создание пользователя (опционально, для безопасности)
-RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
+RUN useradd -m -u 1000 appuser && \
+    mkdir -p /app/models && \
+    chown -R appuser:appuser /app /home/appuser
 USER appuser
+
+ENV HF_HOME=/app/models
+ENV HUGGINGFACE_HUB_CACHE=/app/models
+ENV TRANSFORMERS_CACHE=/app/models
 
 # Монтируемая директория для моделей
 VOLUME ["/app/models"]

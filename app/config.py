@@ -6,7 +6,7 @@ from typing import Literal
 class AppConfig:
     """Конфигурация приложения"""
     # Модель
-    model_id: str = "HuggingFaceTB/SmolVLM2.2-Instruct"
+    model_id: str = "HuggingFaceTB/SmolVLM2-256M-Video-Instruct" #"HuggingFaceTB/SmolVLM2-2.2B-Instruct"
     model_cache_dir: str = os.getenv("MODEL_CACHE_DIR", "/app/models")
     
     # Оборудование

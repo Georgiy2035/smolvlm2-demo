@@ -26,17 +26,16 @@ def load_model():
 # Сценарий 1: VQA + Image Captioning
 def vqa_interface(image, question, history=None):
     """Интерфейс для визуального вопроса-ответа"""
-    if not image:
+    if image is None:
         return "Please upload an image first.", None
     
     # Валидация
     is_valid, msg = validate_input(image, "image")
     if not is_valid:
         return msg, None
-    
     try:
         # Обработка изображения
-        pil_image = Image.fromarray(image)
+        pil_image = Image.open(image)
         
         if question:
             # VQA
@@ -44,13 +43,14 @@ def vqa_interface(image, question, history=None):
         else:
             # Image Captioning
             answer = model_handler.image_caption(pil_image)
-        
+
         # Обновление истории
         if history is None:
             history = []
         
         if question:
-            history.append((question, answer))
+            history.append({"role": "user", "content": question})
+            history.append({"role": "assistant", "content": answer})
         
         return answer, history
         
@@ -61,7 +61,7 @@ def vqa_interface(image, question, history=None):
 # Сценарий 2: OCR с загрузкой
 def ocr_interface(image):
     """Интерфейс для OCR"""
-    if not image:
+    if image is None:
         return "Please upload an image.", None
     
     # Валидация
@@ -71,7 +71,7 @@ def ocr_interface(image):
     
     try:
         # OCR
-        pil_image = Image.fromarray(image)
+        pil_image = Image.open(image)
         text = model_handler.ocr(pil_image)
         
         # Сохранение во временный файл
@@ -94,7 +94,7 @@ def create_interface():
         
         with gr.Row():
             with gr.Column(scale=1):
-                image_input = gr.Image(label="Upload Image", type="numpy")
+                image_input = gr.Image(label="Upload Image", type="filepath")
                 question_input = gr.Textbox(
                     label="Ask a question about the image",
                     placeholder="What is in this image? Describe it...",
@@ -126,7 +126,7 @@ def create_interface():
         
         with gr.Row():
             with gr.Column(scale=1):
-                ocr_image_input = gr.Image(label="Upload Image with Text", type="numpy")
+                ocr_image_input = gr.Image(label="Upload Image with Text", type="filepath")
                 ocr_button = gr.Button("Extract Text", variant="primary")
                 
             with gr.Column(scale=2):

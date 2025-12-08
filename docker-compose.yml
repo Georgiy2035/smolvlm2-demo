@@ -11,13 +11,17 @@ services:
     environment:
       - DEVICE=${DEVICE:-cpu}
       - MODEL_DTYPE=${MODEL_DTYPE:-float32}
+      - MODEL_ID=${MODEL_ID:-HuggingFaceTB/SmolVLM2-2.2B-Instruct}
+      - HF_HOME=/app/models
       - PORT=7860
+      - HUGGINGFACE_HUB_CACHE=/app/models
       - MODEL_CACHE_DIR=/app/models
+      - TRANSFORMERS_CACHE=/app/models
     volumes:
       # Монтирование кэша моделей
       - ./models:/app/models
       # Монтирование кэша Hugging Face (если нужно)
-      - ./hf_cache:/home/appuser/.cache/huggingface
+      #- ./hf_cache:/home/appuser/.cache/huggingface
     restart: unless-stopped
     # Для GPU раскомментировать:
     # deploy:

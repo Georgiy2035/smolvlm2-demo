@@ -1,5 +1,5 @@
 import torch
-from transformers import AutoProcessor, AutoModelForVision2Seq
+from transformers import SmolVLMProcessor, AutoModelForImageTextToText
 from PIL import Image
 import logging
 from typing import Optional, Tuple
@@ -25,12 +25,12 @@ class ModelHandler:
                 logger.info(f"Using cache from {config.model_cache_dir}")
             
             # Загрузка процессора и модели
-            self.processor = AutoProcessor.from_pretrained(
+            self.processor = SmolVLMProcessor.from_pretrained(
                 config.model_id,
                 cache_dir=config.model_cache_dir
             )
             
-            self.model = AutoModelForVision2Seq.from_pretrained(
+            self.model = AutoModelForImageTextToText.from_pretrained(
                 config.model_id,
                 torch_dtype=torch.float16 if config.model_dtype == "float16" else torch.float32,
                 cache_dir=config.model_cache_dir
@@ -43,6 +43,8 @@ class ModelHandler:
             logger.error(f"Failed to load model: {e}")
             raise
     
+
+
     def vqa(self, image: Image.Image, question: str) -> str:
         """Visual Question Answering"""
         if not self.is_loaded:

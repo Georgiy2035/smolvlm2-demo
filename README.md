@@ -10,7 +10,7 @@ docker-compose up --build
 docker run -p 7860:7860 \
   -v ./models:/app/models \
   -e DEVICE=cpu \
-  smolvlm2-demo
+  your_dir-smolvlm2-demo
 
 The server will be on http://localhost:7860/
 
